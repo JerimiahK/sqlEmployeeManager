@@ -10,6 +10,14 @@ const db = mysql.createConnection({
 });
 console.log(db);
 
-db.query("SELECT * FROM roles", function (err, results) {
-  console.log(results);
+db.query("SELECT * FROM department", function (err, results) {
+  console.table(results);
+});
+
+db.query("SELECT * FROM role", function (err, results) {
+  console.table(results);
+});
+
+db.query("SELECT * FROM employee", function (err, results) {
+  console.table(results);
 });
