@@ -74,9 +74,15 @@ JOIN department ON role.department_id = department.id`,
 };
 
 const viewEmployees = function () {
-  db.query("SELECT * FROM employee", function (err, results) {
-    console.table(results);
-    console.log("-----What would you like to do next?-----\n");
-    initalize();
-  });
+  db.query(
+    `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name, role.salary, employee.manager_id
+FROM employee
+RIGHT JOIN role ON employee.role_id = role.id
+LEFT JOIN department ON role.department_id = department.id`,
+    function (err, results) {
+      console.table(results);
+      console.log("-----What would you like to do next?-----\n");
+      initalize();
+    }
+  );
 };
