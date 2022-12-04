@@ -9,10 +9,10 @@ db.connect(function (err) {
   initalize();
 });
 
-// Display a Welcome Message with ascii art
+// Display a welcome message.
 console.table("-----Welcome to Employee Tracker-----");
 
-// Use inquirer to ask initial questions. View departments, view roles, view employees, add department, add role, add employee, update employee.
+// Use inquirer to ask initial questions.
 const initalize = async () => {
   inquirer
     .prompt([
@@ -70,7 +70,7 @@ const initalize = async () => {
           }
         case answers.choices:
           if (answers.choices === "Done with selections") {
-            console.log("selected");
+            console.log("Come back soon!");
             return;
           }
           break;
