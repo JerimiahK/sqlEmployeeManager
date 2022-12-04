@@ -33,6 +33,7 @@ const initalize = async () => {
       },
     ])
     .then((answers) => {
+      console.log(answers.choices);
       switch (answers.choices) {
         case answers.choices:
           if (answers.choices === "View all departments") {
@@ -44,7 +45,33 @@ const initalize = async () => {
           }
         case answers.choices:
           if (answers.choices === "View all employees") {
+            console.log("selected");
             viewEmployees();
+          }
+        case answers.choices:
+          if (answers.choices === "Add a department") {
+            console.log("selected");
+            addDepartment();
+          }
+        case answers.choices:
+          if (answers.choices === "Add a role") {
+            console.log("selected");
+            addRole();
+          }
+        case answers.choices:
+          if (answers.choices === "Add an employee") {
+            console.log("selected");
+            addEmployee();
+          }
+        case answers.choices:
+          if (answers.choices === "Update employee role") {
+            console.log("selected");
+            updateEmployee();
+          }
+        case answers.choices:
+          if (answers.choices === "Done with selections") {
+            console.log("selected");
+            return;
           }
           break;
       }
@@ -60,7 +87,6 @@ const viewDepartments = function () {
   });
 };
 
-// join department table with role table to show what department the role belongs to
 const viewRoles = function () {
   db.query(
     `SELECT role.title, role.id, role.salary, department.name FROM role
@@ -85,4 +111,128 @@ LEFT JOIN department ON role.department_id = department.id`,
       initalize();
     }
   );
+};
+
+const addDepartment = function () {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Please add the name of the new department.",
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please add the id of the new department.",
+      },
+    ])
+    .then((answer) => {
+      console.log(answer.name);
+      db.query(
+        `INSERT INTO department(name, id) VALUES ("${answer.name}", ${answer.id});`,
+        function (err, results) {
+          console.table(results);
+          console.log("-----What would you like to do next?-----\n");
+          initalize();
+        }
+      );
+    });
+};
+
+const addRole = function () {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the title of the new position?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the starting salary of the new position?",
+      },
+      {
+        type: "input",
+        name: "department_id",
+        message: "What is the department id for this position?",
+      },
+    ])
+    .then((answer) => {
+      db.query(
+        `INSERT INTO role(title, salary, department_id) VALUES ("${answer.title}", ${answer.salary}, ${answer.department_id});`,
+        function (err, results) {
+          console.table(results);
+          console.log("-----What would you like to do next?-----\n");
+          initalize();
+        }
+      );
+    });
+};
+
+const addEmployee = function () {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the first name of the new employee?",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the last name of the new employee?",
+      },
+      {
+        type: "input",
+        name: "role_id",
+        message: "What is the role id for this position?",
+      },
+      {
+        type: "input",
+        name: "manager_id",
+        message:
+          "What is the employee's manager's id for this position? (Null if none).",
+      },
+    ])
+    .then((answer) => {
+      db.query(
+        `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES
+        ("${answer.first_name}", "${answer.last_name}", ${answer.role_id}, ${answer.manager_id});`,
+        function (err, results) {
+          console.table(results);
+          console.log("-----What would you like to do next?-----\n");
+          initalize();
+        }
+      );
+    });
+};
+
+const updateEmployee = function () {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message:
+          "What is the first name of the employee whose role you would like to update?",
+      },
+      {
+        type: "input",
+        name: "role_id",
+        message: "What is the new role id you would like the employee to have?",
+      },
+    ])
+    .then((answers) => {
+      console.log(answers.role_id, answers.first_name);
+      db.query(
+        `UPDATE employee SET role_id = ${answers.role_id} WHERE first_name = "${answers.first_name}";`,
+        function (err, results) {
+          console.table(results);
+          console.log("-----What would you like to do next?-----\n");
+          initalize();
+        }
+      );
+    });
 };
